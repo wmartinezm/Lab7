@@ -7,6 +7,7 @@
 #include <sys/byteorder.h>
 
 void rx_callback_function(struct zcan_frame *frame, void *arg);
+void tx_irq_callback(int error, void *arg);
 
 struct zcan_frame frame = {
         .id_type = CAN_STANDARD_IDENTIFIER,
@@ -21,7 +22,7 @@ const struct zcan_filter can_filter = {
         .rtr = CAN_DATAFRAME,
         .id = 0x124,
         .rtr_mask = 1,
-        .id_mask = 0x7FF
+        .id_mask = 0x00
 };
 
 
@@ -32,10 +33,7 @@ int ret;
 
 void CAN_SendMsg(void)
 {
-    ret = can_send(can_dev, &frame, K_MSEC(100), NULL, NULL);
-    if (ret != CAN_TX_OK) {
-        printk("Sending failed [%d]", ret);
-    }
+    ret = can_send(can_dev, &frame, K_MSEC(100), tx_irq_callback, "Sender 2");
 }   
 
 void CAN_Init(void)
@@ -61,4 +59,13 @@ void main(void)
 void rx_callback_function(struct zcan_frame *frame, void *arg)
 {
     printk("CAN message received...");
+}
+
+void tx_irq_callback(int error, void *arg)
+{
+        char *sender = (char *)arg;
+
+        if (error != 0) {
+                printk("Sendig failed [%d]\nSender: %s\n", error, sender);
+        }
 }
