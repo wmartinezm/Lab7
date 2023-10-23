@@ -21,8 +21,8 @@ const struct zcan_filter can_filter = {
         .id_type = CAN_STANDARD_IDENTIFIER,
         .rtr = CAN_DATAFRAME,
         .id = 0x124,
-        .rtr_mask = 1,
-        .id_mask = 0x00
+        .rtr_mask = 0,
+        .id_mask = 0x7FF
 };
 
 
@@ -49,6 +49,7 @@ void main(void)
 
     while (1)
     {
+        
         CAN_SendMsg();
         k_msleep(1000);
     }
