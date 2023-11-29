@@ -1,0 +1,6 @@
+ECE 5960 Adv. Embedded Systems 
+
+LAB 7 NETWORKING 
+Winston and Zander 
+
+main.c contains methods to initiate, establish, and send/recieve messages through a CAN bus with a filter
